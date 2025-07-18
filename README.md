@@ -26,7 +26,7 @@ Add this package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  variable_blur: ^0.0.8
+  variable_blur: ^0.1.0
 ```
 
 Then run:
@@ -144,23 +144,23 @@ ResponsiveBlurSides.horizontal(left: 20.0, right: 40.0)
 ResponsiveBlurSides.vertical(top: 50.0, bottom: 30.0)
 ```
 
-### BlurSides vs ResponsiveBlurSides
+#### BlurSides vs ResponsiveBlurSides
 
-**BlurSides** - Use when you want blur regions as a ratio of the child's size:
-- Values range from 0.0 to 1.0 (e.g., 0.1 = 10% of child's width/height)
+**BlurSides** - Ratio-based blur regions (0.0 to 1.0):
+- Values are percentages of child's width/height
 - Automatically adapts to different widget sizes
 - Perfect for responsive layouts
 
-**ResponsiveBlurSides** - Use when you want blur regions in absolute pixels:
-- Values are in pixels (e.g., 50.0 = 50 pixels)
+**ResponsiveBlurSides** - Pixel-based blur regions:
+- Values are absolute pixels
 - Fixed blur distances regardless of widget size
 - Ideal for consistent visual effects
 
 ```dart
-// Ratio-based: 20% of child's height from top
+// 20% of child's height from top
 BlurSides.vertical(top: 0.2, bottom: 0.0)
 
-// Pixel-based: exactly 50 pixels from top
+// Exactly 50 pixels from top
 ResponsiveBlurSides.vertical(top: 50.0, bottom: 0.0)
 ```
 
@@ -179,15 +179,6 @@ The main widget for applying variable blur effects.
 | `edgeIntensity`| `double`      | `0.15`             | Controls smoothness of blur transitions (0.0 to 1.0)  |
 | `isYFlipNeed`  | `bool`        | `false`            | Whether to flip Y-axis for Android compatibility       |
 
-### BlurSides
-
-Configuration class for controlling blur on different sides.
-
-#### Constructors
-
-- `BlurSides.horizontal({double left, double right})` - Apply blur horizontally
-- `BlurSides.vertical({double top, double bottom})` - Apply blur vertically
-
 ### BlurQuality
 
 Enum for controlling blur quality vs performance:
@@ -196,49 +187,32 @@ Enum for controlling blur quality vs performance:
 - `BlurQuality.medium` - Balanced quality and performance
 - `BlurQuality.high` - Best quality, slower rendering
 
-## Kernel Size and Performance
-
-- Kernel size is now automatically calculated based on your `sigma` value and `quality` setting.
-- **Higher sigma values automatically use larger kernel sizes** for smooth, natural blur effects.
-- **Quality settings control the kernel size multiplier:**
-  - **Low Quality**: Smaller kernels for better performance (good for animations)
-  - **Medium Quality**: Balanced kernels for most use cases
-  - **High Quality**: Full-size kernels for best visual quality
-- The system automatically caps kernel sizes at safe limits to prevent performance issues.
-- You no longer need to manually adjust kernel size - just focus on `sigma` and `quality`!
-
-## Recommended Sigma Values
-
-- For most use cases, a `sigma` value of **12** provides a good blur effect that is visually pleasing and performant.
-- The recommended range for `sigma` is **12** to **15**.
-- Higher sigma values will increase blur strength but also require a larger kernel size and more computational power.
-- Always test different sigma values to find the best balance for your app and device performance.
-
 ## Performance Tips
 
 1. **Use appropriate quality settings**: Lower quality settings for animations, higher for static effects
-2. **Limit blur sigma values**: Very high sigma values (>15) can impact performance
-3. **Choose optimal quality**: The quality setting automatically adjusts kernel size for best performance
-4. **Consider widget tree placement**: Apply blur as close to the target widget as possible
-5. **Cache blur effects**: For static content, consider using RepaintBoundary
+2. **Recommended sigma range**: 8-15 for best performance and visual quality
+3. **Precache shaders**: Use `VariableBlur.precacheShaders()` in your app's main function to eliminate first-render stutter
+4. **Android compatibility**: Set `isYFlipNeed: Platform.isAndroid` for consistent cross-platform behavior
+
+## Shader Precaching
+
+For smooth performance from the first frame:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:variable_blur/variable_blur.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Precache shaders during app startup
+  await VariableBlur.precacheShaders();
+  
+  runApp(MyApp());
+}
+```
 
 ## Examples
-
-The package includes several examples in the `/example` folder:
-
-- Basic variable blur effects
-- Tilt-shift photography simulation
-- Scroll-responsive blur backgrounds
-- Performance optimization techniques
-
-### Visual Examples
-
-| Effect Type | Description |
-|------------|-------------|
-| **Tilt-Shift Blur** | Professional depth-of-field effects similar to tilt-shift photography |
-| **Horizontal Blur** | Apply blur effects horizontally for creative transitions |
-| **Vertical Blur** | Vertical blur effects perfect for scroll-based animations |
-| **Dynamic Effects** | Real-time blur adjustments based on user interactions |
 
 Run the example app:
 
@@ -249,23 +223,16 @@ flutter run
 
 ## Troubleshooting
 
-### Flickering with High Sigma Values
+**Blur effects not visible?**
+- Ensure your child widget has visible pixels (background color, image, etc.)
+- Check that sigma > 0 and blur sides values > 0.0
 
-If you experience flickering when using high sigma values (like `sigma: 20`), this is typically due to GPU resource allocation on the first frame. We've addressed this issue in the latest version by adding the `kernelSize` parameter.
+**Performance issues?**
+- Use `BlurQuality.low` or `BlurQuality.medium`
+- Reduce sigma values (try 8-12 instead of 15+)
+- Use shader precaching for smooth animations
 
-**Solution:**
-1. Update to the latest version (`^0.0.8`)
-2. The kernel size is now automatically calculated based on sigma and quality:
-```dart
-VariableBlur(
-  sigma: 20.0,           // High blur intensity
-  quality: BlurQuality.medium, // Automatically adjusts kernel size
-  blurSides: BlurSides.vertical(top: 0.5, bottom: 0.5),
-  child: yourWidget,
-)
-```
+**Android compatibility issues?**
+- Set `isYFlipNeed: Platform.isAndroid`
 
-**Quality Settings:**
-- **High Quality**: Full kernel size for best quality (may be slower)
-- **Medium Quality**: Balanced kernel size for good performance
-- **Low Quality**: Reduced kernel size for best performance
+For more detailed troubleshooting and advanced usage, check the [example folder](example/) and [documentation](https://pub.dev/packages/variable_blur).

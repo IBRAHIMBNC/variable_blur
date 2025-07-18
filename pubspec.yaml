@@ -1,6 +1,6 @@
 name: variable_blur
 description: "A Flutter package for iOS and Android that provides customizable blur effects including tilt-shift blur for depth-of-field effects."
-version: 0.0.8
+version: 0.1.0
 homepage: https://github.com/ibrahimbnc/variable_blur
 repository: https://github.com/ibrahimbnc/variable_blur
 

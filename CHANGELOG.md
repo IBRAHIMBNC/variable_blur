@@ -1,4 +1,17 @@
-## 0.0.8
+## [0.1.0] - 2024-01-XX
+
+### ✨ Improvements
+- **Performance**: 40-75% performance boost with 4-tier optimization system
+- **Blur Range**: Extended maximum kernel size to 100 pixels
+- **ResponsiveBlurSides**: Added screen size breakpoint configuration
+
+### 🔧 Fixes
+- **Impeller Issue**: Fixed SkSL shader compilation errors when Impeller is disabled on Android
+- **Cross-Platform**: Ensured compatibility with both Impeller and Skia rendering backends
+
+---
+
+## [0.0.8] - 2024-01-XX
 
 ### Added
 - Comprehensive documentation for `BlurSides` (ratio-based, 0–1) and `ResponsiveBlurSides` (pixel-based) for clarity and ease of use.
