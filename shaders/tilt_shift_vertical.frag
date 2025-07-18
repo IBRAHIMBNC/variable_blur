@@ -67,20 +67,57 @@ void main() {
     if (inRight) edgeDistance = min(edgeDistance, fragCoord.x - rightEdge);
     
     // Use kernel size provided from Dart side
-    int kSize = int(kernelSize);
-    // Ensure minimum kernel size for blur effect
-    kSize = max(kSize, 1);
+    float kSizeFloat = max(kernelSize, 1.0);
+    int kSize = int(kSizeFloat);
 
     vec3 result = vec3(0.0);
     float weightSum = 0.0;
     
-    // Vertical blur pass
-    for (int j = -kSize; j <= kSize; ++j) {
-        vec2 offset = vec2(0.0, float(j) / uViewSize.y);
-        vec2 sampleUV = uv + offset;
-        float weight = getGaussianWeight(j, sigma);
-        result += texture(uTexture, sampleUV).rgb * weight;
-        weightSum += weight;
+    // Optimized loop bounds based on kernel size for better performance
+    if (kSize <= 15) {
+        // Small blur: use tight loop bounds
+        for (int j = -15; j <= 15; ++j) {
+            if (j < -kSize || j > kSize) continue;
+            float weight = getGaussianWeight(j, sigma);
+            if (weight < 0.001) continue;  // Skip negligible weights
+            vec2 offset = vec2(0.0, float(j) / uViewSize.y);
+            vec2 sampleUV = uv + offset;
+            result += texture(uTexture, sampleUV).rgb * weight;
+            weightSum += weight;
+        }
+    } else if (kSize <= 30) {
+        // Medium-small blur: use medium-small loop bounds
+        for (int j = -30; j <= 30; ++j) {
+            if (j < -kSize || j > kSize) continue;
+            float weight = getGaussianWeight(j, sigma);
+            if (weight < 0.001) continue;  // Skip negligible weights
+            vec2 offset = vec2(0.0, float(j) / uViewSize.y);
+            vec2 sampleUV = uv + offset;
+            result += texture(uTexture, sampleUV).rgb * weight;
+            weightSum += weight;
+        }
+    } else if (kSize <= 50) {
+        // Medium blur: use medium loop bounds
+        for (int j = -50; j <= 50; ++j) {
+            if (j < -kSize || j > kSize) continue;
+            float weight = getGaussianWeight(j, sigma);
+            if (weight < 0.001) continue;  // Skip negligible weights
+            vec2 offset = vec2(0.0, float(j) / uViewSize.y);
+            vec2 sampleUV = uv + offset;
+            result += texture(uTexture, sampleUV).rgb * weight;
+            weightSum += weight;
+        }
+    } else {
+        // Large blur: use full loop bounds
+        for (int j = -100; j <= 100; ++j) {
+            if (j < -kSize || j > kSize) continue;
+            float weight = getGaussianWeight(j, sigma);
+            if (weight < 0.001) continue;  // Skip negligible weights
+            vec2 offset = vec2(0.0, float(j) / uViewSize.y);
+            vec2 sampleUV = uv + offset;
+            result += texture(uTexture, sampleUV).rgb * weight;
+            weightSum += weight;
+        }
     }
     
     vec3 blurred = result / weightSum;

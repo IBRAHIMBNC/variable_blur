@@ -53,7 +53,7 @@ class _GradualTopBlurState extends State<GradualTopBlur> {
       body: VariableBlur(
         sigma: _blurIntensity,
         edgeIntensity: 0.06,
-        blurSides: ResponsiveBlurSides.vertical(top: screenHeight * 0.12),
+        blurSides: ResponsiveBlurSides.vertical(top: screenHeight * 0.2),
         child: Container(
           color: Colors.black,
           child: ListView(
