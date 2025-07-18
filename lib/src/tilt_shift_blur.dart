@@ -111,6 +111,28 @@ class VariableBlur extends StatelessWidget {
   /// Whether to wrap the blur widget with RepaintBoundary for performance optimization.
   final bool useRepaintBoundary;
 
+  /// Precaches the blur shaders to improve first-render performance.
+  ///
+  /// Call this method early in your app lifecycle (e.g., during app initialization
+  /// or in main()) to eliminate shader compilation delays on first use.
+  ///
+  /// Example:
+  /// ```dart
+  /// void main() {
+  ///   WidgetsFlutterBinding.ensureInitialized();
+  ///   VariableBlur.precacheShaders();
+  ///   runApp(MyApp());
+  /// }
+  /// ```
+  static Future<void> precacheShaders() async {
+    await Future.wait([
+      ShaderBuilder.precacheShader(
+          'packages/variable_blur/shaders/tilt_shift_horizontal.frag'),
+      ShaderBuilder.precacheShader(
+          'packages/variable_blur/shaders/tilt_shift_vertical.frag'),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget blurWidget = ShaderBuilder((context, horizontalShader, _) {
