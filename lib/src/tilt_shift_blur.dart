@@ -232,15 +232,15 @@ class VariableBlur extends StatelessWidget {
   double _getAdjustedKernelSize() {
     // Calculate kernel size based on sigma and quality setting
     // Base formula: kernel_radius = ceil(3.0 * sigma), kernel_size = 2 * radius + 1
-    double baseKernelSize = 2.0 * (3.0 * _getAdjustedSigma()).ceil() + 1.0;
-
+    // double baseKernelSize = 2.0 * (3.0 * _getAdjustedSigma()).ceil() + 1.0;
+    double baseKernelSize = (3.0 * _getAdjustedSigma());
     switch (quality) {
       case BlurQuality.low:
         // Reduce kernel size for performance, but ensure minimum quality
-        return (baseKernelSize * 0.6).clamp(5.0, 25.0);
+        return (baseKernelSize * 0.6).clamp(5.0, 50.0);
       case BlurQuality.medium:
         // Moderate kernel size for balanced performance
-        return (baseKernelSize * 0.8).clamp(7.0, 35.0);
+        return (baseKernelSize * 0.8).clamp(7.0, 75.0);
       case BlurQuality.high:
         // Full kernel size for best quality, but cap for safety
         return baseKernelSize.clamp(9.0, 100.0);
