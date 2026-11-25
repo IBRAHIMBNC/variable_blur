@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart'; // Required for HapticFeedback
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 
@@ -273,8 +273,7 @@ class _ShaderSamplerBuilderLayer extends OffsetLayer {
 }
 
 class MinuteChangeShaderEffect extends StatefulWidget {
-  const MinuteChangeShaderEffect({Key? key, required this.child})
-      : super(key: key);
+  const MinuteChangeShaderEffect({super.key, required this.child});
 
   final Widget child;
 
@@ -331,7 +330,7 @@ class _MinuteChangeShaderEffectState extends State<MinuteChangeShaderEffect>
         _controller.forward();
         HapticFeedback.vibrate();
       }
-      print(currentSec - _prevSec);
+      debugPrint('${currentSec - _prevSec}');
       secondsUntilImpact = currentSec - _prevSec;
       if (currentSec - _prevSec == 55) {
         HapticFeedback.lightImpact();
@@ -354,7 +353,7 @@ class _MinuteChangeShaderEffectState extends State<MinuteChangeShaderEffect>
     if (secondsUntilImpact != null &&
         secondsUntilImpact! <= 55 &&
         secondsUntilImpact! >= 10) {
-      print("secondsUntilImpact ${secondsUntilImpact}");
+      debugPrint("secondsUntilImpact $secondsUntilImpact");
       return widget.child;
     }
     return ShaderBuilder(

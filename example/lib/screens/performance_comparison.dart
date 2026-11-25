@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PerformanceComparison extends StatefulWidget {
   const PerformanceComparison({super.key});
@@ -134,7 +134,7 @@ class _PerformanceComparisonState extends State<PerformanceComparison>
                 margin: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withOpacity(0.3)),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
@@ -179,7 +179,7 @@ class _PerformanceComparisonState extends State<PerformanceComparison>
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
+                              color: Colors.black.withValues(alpha: 0.7),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -252,7 +252,7 @@ class _PerformanceComparisonState extends State<PerformanceComparison>
                           _showBlur = value;
                         });
                       },
-                      activeColor: Colors.indigo,
+                      activeThumbColor: Colors.indigo,
                     ),
 
                     // Blur Strength
@@ -305,11 +305,11 @@ class _PerformanceComparisonState extends State<PerformanceComparison>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -386,7 +386,7 @@ class ElementsPainter extends CustomPainter {
         // Simulate blur by drawing multiple overlapping circles with reduced opacity
         final blurPaint =
             Paint()
-              ..color = element.color.withOpacity(0.1)
+              ..color = element.color.withValues(alpha: 0.1)
               ..style = PaintingStyle.fill;
 
         for (int i = 0; i < blurStrength.round(); i++) {

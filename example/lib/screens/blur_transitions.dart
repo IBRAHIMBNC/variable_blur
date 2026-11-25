@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 class BlurTransitions extends StatefulWidget {
@@ -209,7 +209,7 @@ class _BlurTransitionsState extends State<BlurTransitions>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -290,7 +290,7 @@ class _BlurTransitionsState extends State<BlurTransitions>
                         vertical: 12,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Text(
@@ -328,7 +328,7 @@ class _BlurTransitionsState extends State<BlurTransitions>
                     top: 0,
                     bottom: 0,
                     width: 4,
-                    child: Container(color: Colors.red.withOpacity(0.8)),
+                    child: Container(color: Colors.red.withValues(alpha: 0.8)),
                   ),
                 ],
               ),
@@ -376,16 +376,16 @@ class _BlurTransitionsState extends State<BlurTransitions>
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.white.withValues(alpha: 0.3),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.white.withValues(alpha: 0.7),
                             width: 2,
                           ),
                         ),
                         child: Center(
                           child: Icon(
                             Icons.favorite,
-                            color: Colors.red.withOpacity(0.8),
+                            color: Colors.red.withValues(alpha: 0.8),
                             size: 40,
                           ),
                         ),

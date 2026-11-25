@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 class ScrollBlurHeader extends StatefulWidget {
@@ -81,8 +81,8 @@ class _ScrollBlurHeaderState extends State<ScrollBlurHeader> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          Colors.black.withOpacity(0.3),
-                          Colors.black.withOpacity(0.7),
+                          Colors.black.withValues(alpha: 0.3),
+                          Colors.black.withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -106,7 +106,7 @@ class _ScrollBlurHeaderState extends State<ScrollBlurHeader> {
                               fontWeight: FontWeight.bold,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black.withOpacity(0.5),
+                                  color: Colors.black.withValues(alpha: 0.5),
                                   blurRadius: 10,
                                 ),
                               ],
@@ -116,11 +116,11 @@ class _ScrollBlurHeaderState extends State<ScrollBlurHeader> {
                           Text(
                             'Discover breathtaking landscapes and hidden gems',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               fontSize: 16,
                               shadows: [
                                 Shadow(
-                                  color: Colors.black.withOpacity(0.5),
+                                  color: Colors.black.withValues(alpha: 0.5),
                                   blurRadius: 5,
                                 ),
                               ],
@@ -141,7 +141,7 @@ class _ScrollBlurHeaderState extends State<ScrollBlurHeader> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
@@ -212,7 +212,7 @@ class _ScrollBlurHeaderState extends State<ScrollBlurHeader> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),

@@ -1,5 +1,5 @@
 import 'dart:ui' as ui;
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:variable_blur/src/models/blur_side.dart';
 import 'package:variable_blur/src/models/blur_side_base.dart';

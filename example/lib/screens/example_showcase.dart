@@ -1,5 +1,5 @@
 import 'package:example/screens/gradual_top_blur.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'tilt_shift_photography.dart';
 import 'scroll_blur_header.dart';
 import 'wallpaper_gallery.dart';
@@ -141,7 +141,7 @@ class ExampleShowcase extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+              colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
             ),
           ),
           child: Padding(
@@ -156,7 +156,7 @@ class ExampleShowcase extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: color.withOpacity(0.9),
+                    color: color.withValues(alpha: 0.9),
                   ),
                   textAlign: TextAlign.center,
                 ),

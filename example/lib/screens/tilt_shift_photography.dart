@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 class TiltShiftPhotography extends StatefulWidget {
@@ -40,7 +40,7 @@ class _TiltShiftPhotographyState extends State<TiltShiftPhotography> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -229,7 +229,7 @@ class _TiltShiftPhotographyState extends State<TiltShiftPhotography> {
             activeTrackColor: Colors.blue,
             inactiveTrackColor: Colors.grey.shade700,
             thumbColor: Colors.blue,
-            overlayColor: Colors.blue.withOpacity(0.2),
+            overlayColor: Colors.blue.withValues(alpha: 0.2),
           ),
           child: Slider(value: value, min: min, max: max, onChanged: onChanged),
         ),

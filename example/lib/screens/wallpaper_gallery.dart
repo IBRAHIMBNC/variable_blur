@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 class WallpaperGallery extends StatefulWidget {
@@ -185,7 +185,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                   loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) return child;
                     return Container(
-                      color: wallpaper['color'].withOpacity(0.1),
+                      color: wallpaper['color'].withValues(alpha: 0.1),
                       child: const Center(child: CircularProgressIndicator()),
                     );
                   },
@@ -198,7 +198,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
                   ),
                 ),
               ),
@@ -229,7 +229,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: wallpaper['color'].withOpacity(0.8),
+                            color: wallpaper['color'].withValues(alpha: 0.8),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -303,7 +303,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 15,
                                   offset: const Offset(0, 5),
                                 ),
@@ -347,10 +347,10 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: wallpaper['color'].withOpacity(0.1),
+                                  color: wallpaper['color'].withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: wallpaper['color'].withOpacity(0.3),
+                                    color: wallpaper['color'].withValues(alpha: 0.3),
                                   ),
                                 ),
                                 child: Text(

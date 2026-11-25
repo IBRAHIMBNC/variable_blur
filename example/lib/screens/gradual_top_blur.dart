@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
 class GradualTopBlur extends StatefulWidget {
@@ -105,7 +105,7 @@ class _GradualTopBlurState extends State<GradualTopBlur> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
