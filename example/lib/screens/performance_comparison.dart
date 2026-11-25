@@ -134,7 +134,9 @@ class _PerformanceComparisonState extends State<PerformanceComparison>
                 margin: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),

@@ -1,3 +1,4 @@
+import 'package:example/screens/blur_benchmark.dart';
 import 'package:example/screens/blur_transitions.dart';
 import 'package:example/screens/performance_comparison.dart';
 import 'package:example/screens/scroll_blur_header.dart';
@@ -21,7 +22,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const ExampleShowcase(),
+      home:
+          const bool.fromEnvironment('BENCH')
+              ? const BlurBenchmark()
+              : const ExampleShowcase(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -162,7 +166,10 @@ class ExampleShowcase extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [color.withValues(alpha: 0.1), color.withValues(alpha: 0.05)],
+              colors: [
+                color.withValues(alpha: 0.1),
+                color.withValues(alpha: 0.05),
+              ],
             ),
           ),
           child: Padding(

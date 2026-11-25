@@ -198,7 +198,10 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black.withValues(alpha: 0.3)],
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withValues(alpha: 0.3),
+                    ],
                   ),
                 ),
               ),
@@ -347,10 +350,14 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                                   vertical: 6,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: wallpaper['color'].withValues(alpha: 0.1),
+                                  color: wallpaper['color'].withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: wallpaper['color'].withValues(alpha: 0.3),
+                                    color: wallpaper['color'].withValues(
+                                      alpha: 0.3,
+                                    ),
                                   ),
                                 ),
                                 child: Text(

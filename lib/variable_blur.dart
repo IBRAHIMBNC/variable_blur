@@ -32,5 +32,6 @@
 /// ```
 library;
 
-export 'src/tilt_shift_blur.dart';
+export 'src/variable_blur.dart';
 export 'src/models/blur_side.dart';
+export 'src/models/blur_side_base.dart';

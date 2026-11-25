@@ -1,3 +1,22 @@
+## [0.2.0]
+
+### Changed
+- **Engine blur**: The blur now runs inside Flutter's rendering engine as an `ImageFilter.shader`, so the child is no longer copied into Dart-side images every frame (the old path made two copies per blurred widget per frame).
+- **True variable blur**: Each pixel gets its own blur strength that rises smoothly into the blur regions, instead of fading a sharp image into one fixed blur.
+- **Quality**: `BlurQuality` now sets the samples read per pixel (16, 24 or 32 per side). It no longer weakens `sigma`, so `low` and `medium` now blur as strongly as `high`.
+- **Y-flip**: Handled automatically when Impeller uses OpenGL ES. `isYFlipNeed` is only used by the fallback.
+- Requires Flutter 3.32 or newer. Tested on Flutter 3.32.0 and 3.50.1 (iOS simulator).
+- Works under `Transform.scale`. Rotation is not supported: the blur zones stay aligned to the screen.
+
+### Kept
+- Apps that turn Impeller off fall back to the previous two-pass shader blur.
+- Public API is unchanged. `BlurSidesBase` is now exported, since `blurSides` uses it.
+
+### Removed
+- Unused `shader_builder.dart` helper and empty files.
+
+---
+
 ## [0.1.0] - 2024-01-XX
 
 ### ✨ Improvements

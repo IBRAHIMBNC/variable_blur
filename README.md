@@ -17,7 +17,8 @@ A Flutter package that provides customizable blur effects including tilt-shift b
 - **Variable Blur Effects**: Apply blur effects with different intensities on different sides of a widget
 - **Tilt-Shift Blur**: Create professional depth-of-field effects similar to tilt-shift photography
 - **Customizable Blur Sides**: Control blur intensity independently on top, bottom, left, and right sides
-- **Performance Optimized**: Uses GPU shaders for smooth, high-performance blur rendering
+- **True Variable Blur**: Every pixel gets its own blur strength, rising smoothly from sharp to full blur, instead of a sharp image faded into a blurred one
+- **No Per-Frame Image Copies**: Runs inside Flutter's rendering engine (Impeller) as an image filter, so the child is never copied into an image each frame
 - **Quality Control**: Adjustable quality settings for performance optimization
 
 ## Getting started
@@ -26,7 +27,7 @@ Add this package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  variable_blur: ^0.1.0
+  variable_blur: ^0.2.0
 ```
 
 Then run:
@@ -175,9 +176,9 @@ The main widget for applying variable blur effects.
 | `child`        | `Widget`      | required           | The widget to apply blur effects to                    |
 | `sigma`        | `double`      | required           | The blur intensity (0.0 = no blur, higher = more blur) |
 | `blurSides`    | `BlurSides`   | required           | Configuration for which sides to blur                  |
-| `quality`      | `BlurQuality` | `BlurQuality.high` | Quality setting for performance optimization           |
+| `quality`      | `BlurQuality` | `BlurQuality.high` | Samples per side: 16 (low), 24 (medium), 32 (high)     |
 | `edgeIntensity`| `double`      | `0.15`             | Controls smoothness of blur transitions (0.0 to 1.0)  |
-| `isYFlipNeed`  | `bool`        | `false`            | Whether to flip Y-axis for Android compatibility       |
+| `isYFlipNeed`  | `bool`        | `false`            | Only used when Impeller is turned off (see below)      |
 
 ### BlurQuality
 
@@ -192,7 +193,7 @@ Enum for controlling blur quality vs performance:
 1. **Use appropriate quality settings**: Lower quality settings for animations, higher for static effects
 2. **Recommended sigma range**: 8-15 for best performance and visual quality
 3. **Precache shaders**: Use `VariableBlur.precacheShaders()` in your app's main function to eliminate first-render stutter
-4. **Android compatibility**: Set `isYFlipNeed: Platform.isAndroid` for consistent cross-platform behavior
+4. **Impeller**: The blur runs in the engine when Impeller is on (the default on iOS and Android). Apps that turn Impeller off get the older snapshot-based blur, which uses more memory
 
 ## Shader Precaching
 
@@ -221,6 +222,12 @@ cd example
 flutter run
 ```
 
+A repeatable scroll benchmark (no network images) for comparing memory and frame time:
+
+```bash
+flutter run --dart-define=BENCH=true
+```
+
 ## Troubleshooting
 
 **Blur effects not visible?**
@@ -232,7 +239,7 @@ flutter run
 - Reduce sigma values (try 8-12 instead of 15+)
 - Use shader precaching for smooth animations
 
-**Android compatibility issues?**
-- Set `isYFlipNeed: Platform.isAndroid`
+**Upside-down blur on Android with Impeller turned off?**
+- Set `isYFlipNeed: true`. With Impeller on, the flip is handled automatically
 
 For more detailed troubleshooting and advanced usage, check the [example folder](example/) and [documentation](https://pub.dev/packages/variable_blur).

@@ -1,6 +1,6 @@
 name: variable_blur
 description: "A Flutter package for iOS and Android that provides customizable blur effects including tilt-shift blur for depth-of-field effects."
-version: 0.1.1
+version: 0.2.0
 homepage: https://github.com/ibrahimbnc/variable_blur
 repository: https://github.com/ibrahimbnc/variable_blur
 
@@ -24,8 +24,8 @@ keywords:
   - sof-edge-blur
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
-  flutter: ">=3.0.0"
+  sdk: ">=3.8.0 <4.0.0"
+  flutter: ">=3.32.0"
 
 # Platform restrictions - only support iOS and Android
 platforms:
@@ -51,6 +51,7 @@ flutter:
   uses-material-design: true
   # To add assets to your package, add an assets section, like this:
   shaders:
+    - shaders/variable_blur.frag
     - shaders/tilt_shift_horizontal.frag
     - shaders/tilt_shift_vertical.frag
 
