@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:variable_blur/src/models/blur_side.dart';
 import 'package:variable_blur/src/models/blur_side_base.dart';
@@ -58,6 +59,7 @@ class VariableBlur extends StatefulWidget {
     )
     this.isYFlipNeed = false,
     this.useRepaintBoundary = true,
+    this.updateEveryFrame = false,
   });
 
   /// The widget to blur.
@@ -91,6 +93,21 @@ class VariableBlur extends StatefulWidget {
   /// Whether to wrap the blur in a [RepaintBoundary].
   final bool useRepaintBoundary;
 
+  /// Redoes the blur on every frame, for content that changes without
+  /// Flutter repainting it, such as a video (`VideoPlayer`), a camera
+  /// preview or any other `Texture`.
+  ///
+  /// Without it, the blurred part shows the last frame that Flutter painted
+  /// while the sharp part keeps playing. It costs about as much as a blur
+  /// whose content changes every frame, so leave it off for normal widgets:
+  /// they are re-blurred automatically when they change.
+  ///
+  /// Native views (platform views such as Google Maps or a WebView) are drawn
+  /// by the operating system, not by Flutter, so they cannot be blurred with
+  /// or without this. Map packages drawn by Flutter, such as `flutter_map`,
+  /// work without it.
+  final bool updateEveryFrame;
+
   static const String _passKey =
       'packages/variable_blur/shaders/variable_blur_pass.frag';
   static const String _compositeKey =
@@ -113,13 +130,41 @@ class VariableBlur extends StatefulWidget {
   State<VariableBlur> createState() => _VariableBlurState();
 }
 
-class _VariableBlurState extends State<VariableBlur> {
+class _VariableBlurState extends State<VariableBlur>
+    with SingleTickerProviderStateMixin {
   _Shaders? _shaders;
 
   bool _waiting = false;
 
+  /// Ticks every frame while [VariableBlur.updateEveryFrame] is on.
+  Ticker? _ticker;
+  final _FrameNotifier _frames = _FrameNotifier();
+
+  @override
+  void initState() {
+    super.initState();
+    _syncTicker();
+  }
+
+  @override
+  void didUpdateWidget(VariableBlur oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _syncTicker();
+  }
+
+  void _syncTicker() {
+    if (widget.updateEveryFrame) {
+      _ticker ??= createTicker((_) => _frames.tick());
+      if (!_ticker!.isActive) _ticker!.start();
+    } else {
+      _ticker?.stop();
+    }
+  }
+
   @override
   void dispose() {
+    _ticker?.dispose();
+    _frames.dispose();
     _shaders?.dispose();
     super.dispose();
   }
@@ -161,6 +206,7 @@ class _VariableBlurState extends State<VariableBlur> {
             MediaQuery.maybeDevicePixelRatioOf(context) ??
             View.maybeOf(context)?.devicePixelRatio ??
             1.0,
+        frames: w.updateEveryFrame ? _frames : null,
         child: w.child,
       ),
     );
@@ -168,6 +214,10 @@ class _VariableBlurState extends State<VariableBlur> {
 
   Widget _wrap(Widget child) =>
       widget.useRepaintBoundary ? RepaintBoundary(child: child) : child;
+}
+
+class _FrameNotifier extends ChangeNotifier {
+  void tick() => notifyListeners();
 }
 
 class _Shaders {
@@ -193,10 +243,12 @@ class _SnapshotBlur extends SingleChildRenderObjectWidget {
     required this.quality,
     required this.flip,
     required this.devicePixelRatio,
+    required this.frames,
     super.child,
   });
 
   final _Shaders shaders;
+  final Listenable? frames;
   final double sigma;
   final BlurSidesBase sides;
   final double edgeIntensity;
@@ -225,7 +277,14 @@ class _RenderSnapshotBlur extends RenderProxyBox {
   _Config? _config;
   final LayerHandle<_BlurLayer> _blurLayer = LayerHandle<_BlurLayer>();
 
+  Listenable? _frames;
+
   void update(_SnapshotBlur w) {
+    if (!identical(w.frames, _frames)) {
+      if (attached) _frames?.removeListener(_redoBlur);
+      _frames = w.frames;
+      if (attached) _frames?.addListener(_redoBlur);
+    }
     final next = _Config(
       shaders: w.shaders,
       sigma: w.sigma,
@@ -238,6 +297,21 @@ class _RenderSnapshotBlur extends RenderProxyBox {
     if (next == _config) return;
     _config = next;
     markNeedsPaint();
+  }
+
+  /// Redoes the blur in the next frame without repainting the child.
+  void _redoBlur() => _blurLayer.layer?.redo();
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _frames?.addListener(_redoBlur);
+  }
+
+  @override
+  void detach() {
+    _frames?.removeListener(_redoBlur);
+    super.detach();
   }
 
   @override
@@ -321,6 +395,10 @@ class _BlurLayer extends OffsetLayer {
   late _Config config;
   Size size = Size.zero;
   ui.Picture? _overlay;
+
+  /// Makes the next frame rebuild the overlay from the child's current
+  /// pixels.
+  void redo() => markNeedsAddToScene();
 
   @override
   void addToScene(ui.SceneBuilder builder) {
