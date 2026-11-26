@@ -24,7 +24,12 @@ class _StoryCardsShowcaseState extends State<StoryCardsShowcase> {
       title: 'Turn up the volume',
       subtitle: 'Fresh music apps for every mood.',
       tint: Color(0xFF3A2A2E),
-      apps: [Colors.redAccent, Colors.indigo, Colors.amber, Colors.teal],
+      apps: [
+        '1511671782779-c97d3d27a1d4',
+        '1470225620780-dba8ba36b745',
+        '1493225457124-a3eb161ffa5f',
+        '1508610048659-a06b669e3321',
+      ],
     ),
     _Story(
       photo: '1500530855697-b586d89ba3ee',
@@ -32,7 +37,7 @@ class _StoryCardsShowcaseState extends State<StoryCardsShowcase> {
       title: 'Desert Drift',
       subtitle: 'Hit the open road in sunset races.',
       tint: Color(0xFF6B4A3A),
-      apps: [Colors.deepOrange],
+      apps: ['1500530855697-b586d89ba3ee'],
     ),
     _Story(
       photo: '1501785888041-af3ef285b470',
@@ -40,7 +45,11 @@ class _StoryCardsShowcaseState extends State<StoryCardsShowcase> {
       title: 'Plan your next escape',
       subtitle: 'Maps, trails and weather for the trip.',
       tint: Color(0xFF1F4A44),
-      apps: [Colors.green, Colors.cyan, Colors.lightBlue],
+      apps: [
+        '1444927714506-8492d94b4e3d',
+        '1490750967868-88aa4486c946',
+        '1534447677768-be436bb09401',
+      ],
     ),
   ];
 
@@ -118,7 +127,7 @@ class _Story {
   final String title;
   final String subtitle;
   final Color tint;
-  final List<Color> apps;
+  final List<String> apps;
 }
 
 class _DateHeader extends StatelessWidget {
@@ -164,7 +173,7 @@ class _StoryCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(26),
         child: SizedBox(
-          height: 460,
+          height: 540,
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -241,19 +250,21 @@ class _StoryCard extends StatelessWidget {
 
 class _AppRow extends StatelessWidget {
   const _AppRow({required this.colors, required this.title});
-  final List<Color> colors;
+  final List<String> colors;
   final String title;
 
-  Widget _icon(Color color) => Container(
-    width: 48,
-    height: 48,
+  Widget _icon(String photo) => Container(
+    width: 54,
+    height: 54,
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [color, Color.lerp(color, Colors.black, 0.35)!],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+      borderRadius: BorderRadius.circular(13),
+      border: Border.all(color: Colors.white24),
+      image: DecorationImage(
+        image: NetworkImage(
+          'https://images.unsplash.com/photo-$photo?w=160&h=160&fit=crop',
+        ),
+        fit: BoxFit.cover,
       ),
-      borderRadius: BorderRadius.circular(12),
     ),
   );
 

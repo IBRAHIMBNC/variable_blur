@@ -22,3 +22,23 @@ void startDemoScroll(State state, ScrollController controller) {
 
   WidgetsBinding.instance.addPostFrameCallback((_) => loop());
 }
+
+/// Swipes [controller] forward page by page, then back to the first page,
+/// when launched with `--dart-define=DEMO_SCROLL=true`.
+void startDemoPages(State state, PageController controller, int pages) {
+  if (!const bool.fromEnvironment('DEMO_SCROLL')) return;
+  Future<void> loop() async {
+    while (state.mounted && controller.hasClients) {
+      await Future<void>.delayed(const Duration(milliseconds: 1600));
+      if (!state.mounted || !controller.hasClients) return;
+      final next = ((controller.page ?? 0).round() + 1) % pages;
+      await controller.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  WidgetsBinding.instance.addPostFrameCallback((_) => loop());
+}

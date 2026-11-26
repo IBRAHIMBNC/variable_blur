@@ -9,8 +9,8 @@ modern iOS apps do under their headers, tab bars, photos and players.
 
 <p align="center">
   <img src="doc/gifs/story_cards.gif" width="230" alt="Story cards whose photos melt into their own colour" />
-  <img src="doc/gifs/frosted_feed.gif" width="230" alt="A feed blurring under a header and a tab bar" />
-  <img src="doc/gifs/travel_cards.gif" width="230" alt="Travel cards with blur behind the title and price" />
+  <img src="doc/gifs/frosted_feed.gif" width="230" alt="A dark photo feed blurring under a header and a floating tab bar" />
+  <img src="doc/gifs/travel_cards.gif" width="230" alt="Full-screen stays with blur behind the details" />
 </p>
 
 - **True progressive blur.** Every pixel gets its own blur strength, rising
@@ -81,8 +81,8 @@ Stack(
 
 ### Frosted header and tab bar
 
-Blur the page, not the bars: the content fades into blur as it slides under the
-header and the tab bar, which stay crisp on top.
+Blur the page, not the bars: the photos fade into blur as they slide under the
+header and the floating tab bar, which stay crisp on top.
 
 <img src="doc/screenshots/frosted_feed.jpg" width="260" alt="Frosted header and tab bar" />
 
@@ -92,16 +92,16 @@ final padding = MediaQuery.paddingOf(context);
 Stack(
   children: [
     VariableBlur(
-      sigma: 16,
-      edgeIntensity: 0.06,
+      sigma: 18,
+      edgeIntensity: 0.07,
       blurSides: ResponsiveBlurSides.vertical(
-        top: padding.top + 88,       // header height + fade
-        bottom: padding.bottom + 88, // tab bar height + fade
+        top: padding.top + 136,     // header height + fade
+        bottom: padding.bottom + 104, // tab bar height + fade
       ),
       child: ListView(children: posts),
     ),
     Positioned(top: 0, left: 0, right: 0, child: header),
-    Positioned(bottom: 0, left: 0, right: 0, child: tabBar),
+    Positioned(left: 20, right: 20, bottom: 10, child: floatingTabBar),
   ],
 )
 ```
@@ -121,25 +121,26 @@ VariableBlur(
 )
 ```
 
-### Travel cards
+### Travel stays
 
-Text that reads on any photo, without a heavy dark gradient.
+Full-screen stays you swipe between. The details read on any photo, without a
+heavy dark gradient.
 
-<img src="doc/screenshots/travel_cards.jpg" width="260" alt="Travel cards" />
+<img src="doc/screenshots/travel_cards.jpg" width="260" alt="Full-screen travel stay" />
 
 ```dart
-ClipRRect(
-  borderRadius: BorderRadius.circular(24),
-  child: Stack(
+PageView.builder(
+  itemCount: stays.length,
+  itemBuilder: (context, i) => Stack(
     fit: StackFit.expand,
     children: [
       VariableBlur(
-        sigma: 22,
-        edgeIntensity: 0.2,
-        blurSides: const BlurSides.vertical(bottom: 0.4),
-        child: Image.network(photo, fit: BoxFit.cover),
+        sigma: 26,
+        edgeIntensity: 0.22,
+        blurSides: const BlurSides.vertical(bottom: 0.48),
+        child: Image.network(stays[i].photo, fit: BoxFit.cover),
       ),
-      Positioned(left: 20, right: 20, bottom: 18, child: titleAndPrice),
+      Positioned(left: 22, right: 22, bottom: 20, child: details),
     ],
   ),
 )
@@ -147,30 +148,35 @@ ClipRRect(
 
 ### Lock screen
 
-A sharp sky behind the clock, a soft one behind the notifications.
+Sharp mountains behind the clock, soft mist behind the notifications.
 
 <img src="doc/screenshots/lock_screen.jpg" width="260" alt="Lock screen" />
 
 ```dart
 VariableBlur(
-  sigma: 24,
+  sigma: 26,
   edgeIntensity: 0.25,
-  blurSides: const BlurSides.vertical(bottom: 0.5),
+  blurSides: const BlurSides.vertical(bottom: 0.55),
   child: Image.network(wallpaper, fit: BoxFit.cover),
 )
 ```
 
-### Miniature city (tilt-shift)
+### Miniature city (tilt-shift editor)
 
-Blur the top and bottom of an aerial photo and a real city looks like a tiny model.
+Blur above and below a sharp band and a real city looks like a tiny model.
+Sliders move the band and change the blur live.
 
-<img src="doc/screenshots/miniature_city.jpg" width="260" alt="Tilt-shift miniature city" />
+<img src="doc/screenshots/miniature_city.jpg" width="260" alt="Tilt-shift photo editor" />
 
 ```dart
+const band = 0.22; // height of the sharp band
 VariableBlur(
-  sigma: 14,
-  edgeIntensity: 0.18,
-  blurSides: const BlurSides.vertical(top: 0.38, bottom: 0.38),
+  sigma: sigma,    // from the Blur slider
+  edgeIntensity: 0.12,
+  blurSides: BlurSides.vertical(
+    top: focus - band / 2,        // focus comes from the Focus slider
+    bottom: 1 - focus - band / 2,
+  ),
   child: Image.network(aerialPhoto, fit: BoxFit.cover),
 )
 ```

@@ -14,15 +14,15 @@ topics:
 screenshots:
   - description: Story cards whose photos melt into a blur tinted with their own colour.
     path: doc/screenshots/story_cards.jpg
-  - description: A feed blurring under a frosted header and tab bar.
+  - description: A dark photo feed blurring under a header and a floating tab bar.
     path: doc/screenshots/frosted_feed.jpg
   - description: Music player with album art melting into the controls.
     path: doc/screenshots/music_player.jpg
-  - description: Travel cards with blur behind the title and price.
+  - description: Full-screen travel stays with blur behind the details.
     path: doc/screenshots/travel_cards.jpg
-  - description: Lock screen with the wallpaper softening behind notifications.
+  - description: Lock screen with misty mountains softening behind notifications.
     path: doc/screenshots/lock_screen.jpg
-  - description: Tilt-shift miniature city.
+  - description: Tilt-shift photo editor that turns a city into a miniature.
     path: doc/screenshots/miniature_city.jpg
   - description: Map fading into blur behind the search bar and place card.
     path: doc/screenshots/map_explorer.jpg
