@@ -7,6 +7,11 @@ import 'package:example/screens/wallpaper_gallery.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:example/screens/gradual_top_blur.dart';
 import 'package:example/screens/native_compare.dart';
+import 'package:example/screens/showcase/frosted_feed.dart';
+import 'package:example/screens/showcase/lock_screen.dart';
+import 'package:example/screens/showcase/miniature.dart';
+import 'package:example/screens/showcase/music_player.dart';
+import 'package:example/screens/showcase/travel_cards.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,15 +29,26 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home:
-          const bool.fromEnvironment('NATIVE_COMPARE')
+          _showcases[const String.fromEnvironment('SHOWCASE')] ??
+          (const bool.fromEnvironment('NATIVE_COMPARE')
               ? const NativeCompare()
               : const bool.fromEnvironment('BENCH')
               ? const BlurBenchmark()
-              : const ExampleShowcase(),
+              : const ExampleShowcase()),
       debugShowCheckedModeBanner: false,
     );
   }
 }
+
+/// Showcase screens, also reachable at launch with
+/// `--dart-define=SHOWCASE=key` (used to capture the README media).
+const _showcases = <String, Widget>{
+  'music': MusicPlayerShowcase(),
+  'feed': FrostedFeedShowcase(),
+  'travel': TravelCardsShowcase(),
+  'lock': LockScreenShowcase(),
+  'miniature': MiniatureShowcase(),
+};
 
 class ExampleShowcase extends StatelessWidget {
   const ExampleShowcase({super.key});
@@ -64,6 +80,54 @@ class ExampleShowcase extends StatelessWidget {
               mainAxisSpacing: 16,
               crossAxisSpacing: 16,
               children: [
+                for (final (title, subtitle, icon, color, page) in [
+                  (
+                    'Music Player',
+                    'Album art melting into the controls',
+                    Icons.music_note_rounded,
+                    Colors.deepPurple,
+                    const MusicPlayerShowcase(),
+                  ),
+                  (
+                    'Frosted Bars',
+                    'Feed blurring under header and tabs',
+                    Icons.blur_on_rounded,
+                    Colors.indigo,
+                    const FrostedFeedShowcase(),
+                  ),
+                  (
+                    'Travel Cards',
+                    'Photos fading behind title and price',
+                    Icons.luggage_rounded,
+                    Colors.orange,
+                    const TravelCardsShowcase(),
+                  ),
+                  (
+                    'Lock Screen',
+                    'Wallpaper softening behind alerts',
+                    Icons.lock_rounded,
+                    Colors.blueGrey,
+                    const LockScreenShowcase(),
+                  ),
+                  (
+                    'Miniature City',
+                    'Tilt-shift toy-model effect',
+                    Icons.location_city_rounded,
+                    Colors.teal,
+                    const MiniatureShowcase(),
+                  ),
+                ])
+                  _buildExampleCard(
+                    context,
+                    title,
+                    subtitle,
+                    icon,
+                    color,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => page),
+                    ),
+                  ),
                 _buildExampleCard(
                   context,
                   'Tilt-Shift Photography',
