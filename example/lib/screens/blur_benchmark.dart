@@ -1,3 +1,6 @@
+import 'dart:math' as math;
+
+import 'package:flutter/scheduler.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:variable_blur/variable_blur.dart';
 
@@ -10,12 +13,25 @@ class BlurBenchmark extends StatefulWidget {
   State<BlurBenchmark> createState() => _BlurBenchmarkState();
 }
 
-class _BlurBenchmarkState extends State<BlurBenchmark> {
+class _BlurBenchmarkState extends State<BlurBenchmark>
+    with SingleTickerProviderStateMixin {
   final _controller = ScrollController();
+
+  /// With --dart-define=BENCH_ANIM=true the blur strength changes every
+  /// frame, the worst case: the blur has to be worked out again each frame.
+  static const _animate = bool.fromEnvironment('BENCH_ANIM');
+  Ticker? _ticker;
+  double _sigma = 20;
 
   @override
   void initState() {
     super.initState();
+    if (_animate) {
+      _ticker = createTicker((elapsed) {
+        final t = elapsed.inMicroseconds / 1e6;
+        setState(() => _sigma = 12 + 8 * math.sin(t * 2));
+      })..start();
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) => _loop());
   }
 
@@ -34,6 +50,7 @@ class _BlurBenchmarkState extends State<BlurBenchmark> {
 
   @override
   void dispose() {
+    _ticker?.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -48,7 +65,7 @@ class _BlurBenchmarkState extends State<BlurBenchmark> {
             (context, i) => SizedBox(
               height: 420,
               child: VariableBlur(
-                sigma: 20,
+                sigma: _sigma,
                 blurSides: const BlurSides.vertical(top: 0.4, bottom: 0.4),
                 child: _Card(index: i),
               ),

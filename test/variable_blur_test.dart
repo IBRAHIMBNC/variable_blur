@@ -36,8 +36,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  // The blur itself needs a GPU and Impeller, which `flutter test` does not
-  // have. It is checked by running the example app on a device.
+  // The blur itself needs a GPU and the compiled shaders, which
+  // `flutter test` does not have. It is checked by running the example app
+  // on a device.
 
   test('blur sides reject negative values', () {
     expect(() => BlurSides.vertical(top: -0.1), throwsAssertionError);

@@ -18,7 +18,7 @@ A Flutter package that provides customizable blur effects including tilt-shift b
 - **Tilt-Shift Blur**: Create professional depth-of-field effects similar to tilt-shift photography
 - **Customizable Blur Sides**: Control blur intensity independently on top, bottom, left, and right sides
 - **True Variable Blur**: Every pixel gets its own blur strength, rising smoothly from sharp to full blur, instead of a sharp image faded into a blurred one
-- **No Per-Frame Image Copies**: Runs inside Flutter's rendering engine (Impeller) as an image filter, so the child is never copied into an image each frame
+- **Light on Memory and CPU**: Blurs a small copy of the child, like Flutter's own blur, and only redoes the blur when the content changes, not while scrolling
 - **Quality Control**: Adjustable quality settings for performance optimization
 
 ## Getting started
@@ -176,24 +176,24 @@ The main widget for applying variable blur effects.
 | `child`        | `Widget`      | required           | The widget to apply blur effects to                    |
 | `sigma`        | `double`      | required           | The blur intensity (0.0 = no blur, higher = more blur) |
 | `blurSides`    | `BlurSides`   | required           | Configuration for which sides to blur                  |
-| `quality`      | `BlurQuality` | `BlurQuality.high` | Samples per side: 16 (low), 24 (medium), 32 (high)     |
+| `quality`      | `BlurQuality` | `BlurQuality.high` | Smaller copy and fewer samples for lower quality       |
 | `edgeIntensity`| `double`      | `0.15`             | Controls smoothness of blur transitions (0.0 to 1.0)  |
-| `isYFlipNeed`  | `bool`        | `false`            | Only used when Impeller is turned off (see below)      |
+| `isYFlipNeed`  | `bool`        | `false`            | Flips the blur if it shows upside down (see below)     |
 
 ### BlurQuality
 
 Enum for controlling blur quality vs performance:
 
-- `BlurQuality.low` - Faster rendering, lower quality
-- `BlurQuality.medium` - Balanced quality and performance
-- `BlurQuality.high` - Best quality, slower rendering
+- `BlurQuality.low` - Copy down to 1/8 size, 16 samples per side: fastest
+- `BlurQuality.medium` - Copy down to 1/8 size, 24 samples per side: balanced
+- `BlurQuality.high` - Copy down to 1/4 size, 32 samples per side: smoothest
 
 ## Performance Tips
 
 1. **Use appropriate quality settings**: Lower quality settings for animations, higher for static effects
 2. **Recommended sigma range**: 8-15 for best performance and visual quality
 3. **Precache shaders**: Use `VariableBlur.precacheShaders()` in your app's main function to eliminate first-render stutter
-4. **Impeller**: The blur runs in the engine when Impeller is on (the default on iOS and Android). Apps that turn Impeller off get the older snapshot-based blur, which uses more memory
+4. **Avoid animating the child under a strong blur when you can**: the blur is reused while the widget moves, but redone whenever the child's content or `sigma` changes
 
 ## Shader Precaching
 
@@ -225,7 +225,9 @@ flutter run
 A repeatable scroll benchmark (no network images) for comparing memory and frame time:
 
 ```bash
-flutter run --dart-define=BENCH=true
+flutter run --profile --dart-define=BENCH=true
+# Worst case: the blur strength changes every frame
+flutter run --profile --dart-define=BENCH=true --dart-define=BENCH_ANIM=true
 ```
 
 ## Troubleshooting
@@ -239,7 +241,7 @@ flutter run --dart-define=BENCH=true
 - Reduce sigma values (try 8-12 instead of 15+)
 - Use shader precaching for smooth animations
 
-**Upside-down blur on Android with Impeller turned off?**
-- Set `isYFlipNeed: true`. With Impeller on, the flip is handled automatically
+**Upside-down blur on some Android devices?**
+- Set `isYFlipNeed: true`. Impeller on OpenGL ES is detected automatically
 
 For more detailed troubleshooting and advanced usage, check the [example folder](example/) and [documentation](https://pub.dev/packages/variable_blur).

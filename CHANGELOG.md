@@ -1,19 +1,21 @@
 ## [0.2.0]
 
 ### Changed
-- **Engine blur**: The blur now runs inside Flutter's rendering engine as an `ImageFilter.shader`, so the child is no longer copied into Dart-side images every frame (the old path made two copies per blurred widget per frame).
+- **Small-copy blur, like Flutter's own blur**: The child is rendered into a small copy (down to 1/4 or 1/8 size for strong blur), blurred there, and laid back over the sharp child. The sharp area keeps every original pixel.
+- **Less work while scrolling**: The blur is only worked out again when the child's content or the blur settings change. Moving the widget reuses the last result.
+- **Measured on an iPhone 17 Pro Max** (profile mode, 30 blurred cards scrolling): CPU about 50% instead of 113%, memory about 195 MB instead of 230 MB. With the blur strength changing every frame: CPU 66–94% instead of 128–142%, memory about 218 MB instead of 280 MB.
 - **True variable blur**: Each pixel gets its own blur strength that rises smoothly into the blur regions, instead of fading a sharp image into one fixed blur.
-- **Quality**: `BlurQuality` now sets the samples read per pixel (16, 24 or 32 per side). It no longer weakens `sigma`, so `low` and `medium` now blur as strongly as `high`.
-- **Y-flip**: Handled automatically when Impeller uses OpenGL ES. `isYFlipNeed` is only used by the fallback.
-- Requires Flutter 3.32 or newer. Tested on Flutter 3.32.0 and 3.50.1 (iOS simulator).
-- Works under `Transform.scale`. Rotation is not supported: the blur zones stay aligned to the screen.
+- **Quality**: `BlurQuality` now sets how small the blurred copy may get and how many samples each pixel reads. It no longer weakens `sigma`.
+- **Shapes**: The blur stays inside the child's own shape, so rounded or see-through parts do not leak sharp pixels or spread a halo.
+- **Transforms**: Works under `Transform.scale` and `Transform.rotate`.
+- **Y-flip**: Handled automatically when Impeller uses OpenGL ES. `isYFlipNeed` is only needed if the blur still shows upside down.
+- Requires Flutter 3.32 or newer. Tested on Flutter 3.32.0 (iOS simulator) and 3.50.1 (iOS simulator and iPhone). Not yet tested on Android or with Impeller turned off.
 
 ### Kept
-- Apps that turn Impeller off fall back to the previous two-pass shader blur.
 - Public API is unchanged. `BlurSidesBase` is now exported, since `blurSides` uses it.
 
 ### Removed
-- Unused `shader_builder.dart` helper and empty files.
+- The `flutter_shaders` dependency, the old two-pass shaders and the unused `shader_builder.dart` helper.
 
 ---
 
