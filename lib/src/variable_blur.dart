@@ -52,6 +52,10 @@ class VariableBlur extends StatefulWidget {
     required this.blurSides,
     this.quality = BlurQuality.high,
     this.edgeIntensity = 0.15,
+    @Deprecated(
+      'The blur is the right way up on every backend now. '
+      'This will be removed in a future release.',
+    )
     this.isYFlipNeed = false,
     this.useRepaintBoundary = true,
   });
@@ -73,9 +77,15 @@ class VariableBlur extends StatefulWidget {
   /// larger side.
   final double edgeIntensity;
 
-  /// Flips the Y axis when reading the blurred copy. Impeller on OpenGL ES is
-  /// detected automatically; set this only if the blur still shows upside
-  /// down on a particular device.
+  /// Flips the Y axis when reading the blurred copy.
+  ///
+  /// Not needed any more: the blur is the right way up on every backend,
+  /// including Impeller on OpenGL ES. Kept only so existing code still
+  /// compiles; it will be removed in a future release.
+  @Deprecated(
+    'The blur is the right way up on every backend now. '
+    'This will be removed in a future release.',
+  )
   final bool isYFlipNeed;
 
   /// Whether to wrap the blur in a [RepaintBoundary].
@@ -145,6 +155,7 @@ class _VariableBlurState extends State<VariableBlur> {
         sides: sides,
         edgeIntensity: w.edgeIntensity,
         quality: w.quality,
+        // ignore: deprecated_member_use_from_same_package
         flip: w.isYFlipNeed,
         devicePixelRatio:
             MediaQuery.maybeDevicePixelRatioOf(context) ??

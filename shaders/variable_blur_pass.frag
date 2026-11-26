@@ -52,9 +52,6 @@ void main() {
   vec2 p = FlutterFragCoord().xy;
   vec2 uv = p / uSize;
   float flip = uFlip;
-#ifdef IMPELLER_TARGET_OPENGLES
-  flip = 1.0 - flip;
-#endif
   if (flip > 0.5) uv.y = 1.0 - uv.y;
   vec2 dir = uDirection;
   if (flip > 0.5) dir.y = -dir.y;

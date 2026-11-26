@@ -178,7 +178,7 @@ The main widget for applying variable blur effects.
 | `blurSides`    | `BlurSides`   | required           | Configuration for which sides to blur                  |
 | `quality`      | `BlurQuality` | `BlurQuality.high` | Smaller copy and fewer samples for lower quality       |
 | `edgeIntensity`| `double`      | `0.15`             | Controls smoothness of blur transitions (0.0 to 1.0)  |
-| `isYFlipNeed`  | `bool`        | `false`            | Flips the blur if it shows upside down (see below)     |
+| `isYFlipNeed`  | `bool`        | `false`            | Deprecated: no longer needed (see below)               |
 
 ### BlurQuality
 
@@ -241,7 +241,7 @@ flutter run --profile --dart-define=BENCH=true --dart-define=BENCH_ANIM=true
 - Reduce sigma values (try 8-12 instead of 15+)
 - Use shader precaching for smooth animations
 
-**Upside-down blur on some Android devices?**
-- Set `isYFlipNeed: true`. Impeller on OpenGL ES is detected automatically
+**Upside-down blur?**
+- This should not happen any more: the blur is the right way up on every backend, including Impeller on OpenGL ES. `isYFlipNeed` is deprecated and will be removed; please open an issue if you still see it.
 
 For more detailed troubleshooting and advanced usage, check the [example folder](example/) and [documentation](https://pub.dev/packages/variable_blur).

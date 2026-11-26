@@ -51,9 +51,6 @@ void main() {
   }
   vec2 uv = (p - uCropOrigin) / uCropSize;
   float flip = uFlip;
-#ifdef IMPELLER_TARGET_OPENGLES
-  flip = 1.0 - flip;
-#endif
   if (flip > 0.5) uv.y = 1.0 - uv.y;
   // Bilinear upscale done by hand, so it is smooth whatever filtering the
   // engine uses for shader images (older versions sample nearest).

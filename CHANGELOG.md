@@ -9,7 +9,7 @@
 - **Quality**: `BlurQuality` now sets how small the blurred copy may get and how many samples each pixel reads. It no longer weakens `sigma`.
 - **Shapes**: The blur stays inside the child's own shape, so rounded or see-through parts do not leak sharp pixels or spread a halo.
 - **Transforms**: Works under `Transform.scale` and `Transform.rotate`.
-- **Y-flip**: Handled automatically when Impeller uses OpenGL ES. `isYFlipNeed` is only needed if the blur still shows upside down.
+- **Y-flip**: No flip is applied on any backend. On Flutter 3.50.1 with Impeller on OpenGL ES (Android emulator) the blurred copy is already the right way up; the old automatic OpenGL ES flip drew it upside down. `isYFlipNeed` is now deprecated and will be removed in a future release.
 - Requires Flutter 3.32 or newer. Tested on Flutter 3.32.0 (iOS simulator) and 3.50.1 (iOS simulator and iPhone). Not yet tested on Android or with Impeller turned off.
 
 ### Kept
