@@ -1,27 +1,33 @@
 name: variable_blur
-description: "A Flutter package for iOS and Android that provides customizable blur effects including tilt-shift blur for depth-of-field effects."
+description: "Progressive (variable) blur for Flutter: fade any widget from sharp to blurred under headers, tab bars, photos, players, maps and video."
 version: 0.2.0
 homepage: https://github.com/ibrahimbnc/variable_blur
 repository: https://github.com/ibrahimbnc/variable_blur
 
-# Keywords for pub.dev search discoverability
-keywords:
+topics:
   - blur
-  - tilt-shift
-  - image-effects
-  - visual-effects
-  - shader
   - ui
-  - depth-of-field
-  - photography
-  - filter
-  - background-blur
-  - gaussian-blur
-  - image-processing
-  - graphics
-  - animation
-  - soft-blur
-  - sof-edge-blur
+  - effects
+  - shaders
+  - widget
+
+screenshots:
+  - description: Story cards whose photos melt into a blur tinted with their own colour.
+    path: doc/screenshots/story_cards.jpg
+  - description: A feed blurring under a frosted header and tab bar.
+    path: doc/screenshots/frosted_feed.jpg
+  - description: Music player with album art melting into the controls.
+    path: doc/screenshots/music_player.jpg
+  - description: Travel cards with blur behind the title and price.
+    path: doc/screenshots/travel_cards.jpg
+  - description: Lock screen with the wallpaper softening behind notifications.
+    path: doc/screenshots/lock_screen.jpg
+  - description: Tilt-shift miniature city.
+    path: doc/screenshots/miniature_city.jpg
+  - description: Map fading into blur behind the search bar and place card.
+    path: doc/screenshots/map_explorer.jpg
+  - description: Video with a blurred caption area that follows playback.
+    path: doc/screenshots/video_story.jpg
 
 environment:
   sdk: ">=3.8.0 <4.0.0"

@@ -75,9 +75,8 @@ class _NativeCompareState extends State<NativeCompare> {
   void _report() {
     double avg(List<double> v) =>
         v.isEmpty ? 0 : v.reduce((a, b) => a + b) / v.length;
-    final peak = _samples.isEmpty
-        ? 0.0
-        : _samples.reduce((a, b) => a > b ? a : b);
+    final peak =
+        _samples.isEmpty ? 0.0 : _samples.reduce((a, b) => a > b ? a : b);
     final line =
         'BENCH_RESULT mode=$_mode q=$_quality '
         'avgMB=${avg(_samples).toStringAsFixed(1)} '
@@ -115,7 +114,8 @@ class _NativeCompareState extends State<NativeCompare> {
     final list = ListView.builder(
       controller: _controller,
       itemCount: 30,
-      itemBuilder: (context, i) => SizedBox(height: 420, child: _Card(index: i)),
+      itemBuilder:
+          (context, i) => SizedBox(height: 420, child: _Card(index: i)),
     );
 
     final Widget body = switch (_mode) {

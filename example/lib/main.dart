@@ -9,9 +9,12 @@ import 'package:example/screens/gradual_top_blur.dart';
 import 'package:example/screens/native_compare.dart';
 import 'package:example/screens/showcase/frosted_feed.dart';
 import 'package:example/screens/showcase/lock_screen.dart';
+import 'package:example/screens/showcase/map_explorer.dart';
 import 'package:example/screens/showcase/miniature.dart';
 import 'package:example/screens/showcase/music_player.dart';
+import 'package:example/screens/showcase/story_cards.dart';
 import 'package:example/screens/showcase/travel_cards.dart';
+import 'package:example/screens/showcase/video_story.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,6 +51,9 @@ const _showcases = <String, Widget>{
   'travel': TravelCardsShowcase(),
   'lock': LockScreenShowcase(),
   'miniature': MiniatureShowcase(),
+  'map': MapExplorerShowcase(),
+  'stories': StoryCardsShowcase(),
+  'video': VideoStoryShowcase(),
 };
 
 class ExampleShowcase extends StatelessWidget {
@@ -115,6 +121,27 @@ class ExampleShowcase extends StatelessWidget {
                     Icons.location_city_rounded,
                     Colors.teal,
                     const MiniatureShowcase(),
+                  ),
+                  (
+                    'Story Cards',
+                    'Photos melting into their own colour',
+                    Icons.auto_stories_rounded,
+                    Colors.pink,
+                    const StoryCardsShowcase(),
+                  ),
+                  (
+                    'Map Explorer',
+                    'Map fading behind search and card',
+                    Icons.map_rounded,
+                    Colors.green,
+                    const MapExplorerShowcase(),
+                  ),
+                  (
+                    'Video Story',
+                    'Blur that follows a playing video',
+                    Icons.play_circle_rounded,
+                    Colors.red,
+                    const VideoStoryShowcase(),
                   ),
                 ])
                   _buildExampleCard(
