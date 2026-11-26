@@ -1,9 +1,6 @@
 import 'package:example/screens/blur_benchmark.dart';
-import 'package:example/screens/blur_transitions.dart';
 import 'package:example/screens/performance_comparison.dart';
-import 'package:example/screens/scroll_blur_header.dart';
 import 'package:example/screens/tilt_shift_photography.dart';
-import 'package:example/screens/wallpaper_gallery.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:example/screens/gradual_top_blur.dart';
 import 'package:example/screens/native_compare.dart';
@@ -170,19 +167,6 @@ class ExampleShowcase extends StatelessWidget {
                 ),
                 _buildExampleCard(
                   context,
-                  'Scroll Blur Header',
-                  'Dynamic blur based on scroll position',
-                  Icons.vertical_align_center,
-                  Colors.green,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ScrollBlurHeader(),
-                    ),
-                  ),
-                ),
-                _buildExampleCard(
-                  context,
                   'Scroll Base Blur',
                   'Dynamic blur based on scroll position',
                   Icons.vertical_align_center,
@@ -190,33 +174,6 @@ class ExampleShowcase extends StatelessWidget {
                   () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => GradualTopBlur()),
-                  ),
-                ),
-
-                _buildExampleCard(
-                  context,
-                  'Wallpaper Gallery',
-                  'Beautiful blur effects in galleries',
-                  Icons.photo_library,
-                  Colors.pink,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WallpaperGallery(),
-                    ),
-                  ),
-                ),
-                _buildExampleCard(
-                  context,
-                  'Blur Transitions',
-                  'Smooth animated blur transitions',
-                  Icons.animation,
-                  Colors.teal,
-                  () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BlurTransitions(),
-                    ),
                   ),
                 ),
                 _buildExampleCard(
