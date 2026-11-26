@@ -6,6 +6,7 @@ import 'package:example/screens/tilt_shift_photography.dart';
 import 'package:example/screens/wallpaper_gallery.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:example/screens/gradual_top_blur.dart';
+import 'package:example/screens/native_compare.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home:
-          const bool.fromEnvironment('BENCH')
+          const bool.fromEnvironment('NATIVE_COMPARE')
+              ? const NativeCompare()
+              : const bool.fromEnvironment('BENCH')
               ? const BlurBenchmark()
               : const ExampleShowcase(),
       debugShowCheckedModeBanner: false,
