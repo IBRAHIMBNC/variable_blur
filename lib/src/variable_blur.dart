@@ -336,22 +336,6 @@ class _BlurLayer extends OffsetLayer {
     final c = config;
     final shrink = _shrinkFactor(c.sigma * c.devicePixelRatio, c.quality);
     final ratio = c.devicePixelRatio / shrink;
-    final w = math.max(1, (size.width * ratio).ceil());
-    final h = math.max(1, (size.height * ratio).ceil());
-
-    // 1. The child, rendered straight into a small image.
-    // Scale each axis so the child fills the whole image exactly; a half
-    // filled last row or column would let the sharp child show through near
-    // the edges once blurred.
-    final builder = ui.SceneBuilder()
-      ..pushTransform(
-        Matrix4.diagonal3Values(w / size.width, h / size.height, 1).storage,
-      );
-    addChildrenToScene(builder);
-    builder.pop();
-    final scene = builder.build();
-    final small = scene.toImageSync(w, h);
-    scene.dispose();
 
     // Blur regions, in logical pixels.
     final sides = c.sides;
@@ -361,12 +345,96 @@ class _BlurLayer extends OffsetLayer {
     final left = inPixels ? sides.left : sides.left * size.width;
     final right = inPixels ? sides.right : sides.right * size.width;
     final transition = size.longestSide * c.edgeIntensity;
+
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(recorder);
+    for (final crop in _crops(top, bottom, left, right, c.sigma)) {
+      _blurCrop(canvas, crop, ratio, top, bottom, left, right, transition);
+    }
+    return recorder.endRecording();
+  }
+
+  /// The parts of the child that need blurring, in logical pixels.
+  ///
+  /// Only the blur regions, plus how far their blur reaches inward, are
+  /// copied and blurred, not the whole child. This saves memory and work
+  /// when the regions cover only part of the child, such as a top fade.
+  /// Opposite regions that do not touch (top and bottom, or left and right)
+  /// get one copy each; any other mix gets one copy covering them all.
+  List<Rect> _crops(
+    double top,
+    double bottom,
+    double left,
+    double right,
+    double sigma,
+  ) {
+    final full = Offset.zero & size;
+    // A pixel's blur reaches at most 2.5 sigma, the reach of the blur pass.
+    final reach = 2.5 * sigma;
+    Rect band(double l, double t, double r, double b) =>
+        Rect.fromLTRB(l, t, r, b).intersect(full);
+    final rects = <Rect>[
+      if (top > 0) band(0, 0, size.width, top + reach),
+      if (bottom > 0)
+        band(0, size.height - bottom - reach, size.width, size.height),
+      if (left > 0) band(0, 0, left + reach, size.height),
+      if (right > 0)
+        band(size.width - right - reach, 0, size.width, size.height),
+    ];
+    final vertical = left <= 0 && right <= 0;
+    final horizontal = top <= 0 && bottom <= 0;
+    if (rects.length == 2 &&
+        (vertical || horizontal) &&
+        !rects[0].overlaps(rects[1])) {
+      return rects;
+    }
+    return [rects.reduce((a, b) => a.expandToInclude(b))];
+  }
+
+  /// Blurs one part of the child and paints it, as an overlay, onto [canvas].
+  void _blurCrop(
+    Canvas canvas,
+    Rect crop,
+    double ratio,
+    double top,
+    double bottom,
+    double left,
+    double right,
+    double transition,
+  ) {
+    final c = config;
+    final w = math.max(1, (crop.width * ratio).ceil());
+    final h = math.max(1, (crop.height * ratio).ceil());
+
+    // 1. The cropped child, rendered straight into a small image.
+    // Scale each axis so the crop fills the whole image exactly; a half
+    // filled last row or column would let the sharp child show through near
+    // the edges once blurred.
+    final sx = w / crop.width, sy = h / crop.height;
+    final builder = ui.SceneBuilder()
+      ..pushTransform(
+        (Matrix4.diagonal3Values(
+          sx,
+          sy,
+          1,
+        )..translateByDouble(-crop.left, -crop.top, 0, 1)).storage,
+      );
+    addChildrenToScene(builder);
+    builder.pop();
+    final scene = builder.build();
+    final small = scene.toImageSync(w, h);
+    scene.dispose();
+
+    // The regions, measured from the crop's own edges.
+    final cropTop = math.max(0.0, top - crop.top);
+    final cropBottom = math.max(0.0, bottom - (size.height - crop.bottom));
+    final cropLeft = math.max(0.0, left - crop.left);
+    final cropRight = math.max(0.0, right - (size.width - crop.right));
     final taps = switch (c.quality) {
       BlurQuality.low => 16.0,
       BlurQuality.medium => 24.0,
       BlurQuality.high => 32.0,
     };
-    final sx = w / size.width, sy = h / size.height;
     final flip = c.flip ? 1.0 : 0.0;
 
     // 2. Horizontal, then vertical blur, both on the small image.
@@ -375,10 +443,10 @@ class _BlurLayer extends OffsetLayer {
         ..setFloat(0, w.toDouble())
         ..setFloat(1, h.toDouble())
         ..setFloat(2, c.sigma * ratio)
-        ..setFloat(3, top * sy)
-        ..setFloat(4, bottom * sy)
-        ..setFloat(5, left * sx)
-        ..setFloat(6, right * sx)
+        ..setFloat(3, cropTop * sy)
+        ..setFloat(4, cropBottom * sy)
+        ..setFloat(5, cropLeft * sx)
+        ..setFloat(6, cropRight * sx)
         ..setFloat(7, transition * ratio)
         ..setFloat(8, dx)
         ..setFloat(9, dy)
@@ -400,7 +468,7 @@ class _BlurLayer extends OffsetLayer {
     final blurred = blurPass(c.shaders.vertical, across, 0, 1);
     across.dispose();
 
-    // 3. The overlay: the blurred copy stretched back to full size, faded
+    // 3. The overlay: the blurred copy stretched back over the crop, faded
     // out where the blur is weak.
     c.shaders.composite
       ..setFloat(0, size.width)
@@ -414,15 +482,15 @@ class _BlurLayer extends OffsetLayer {
       ..setFloat(8, flip)
       ..setFloat(9, w.toDouble())
       ..setFloat(10, h.toDouble())
+      ..setFloat(11, crop.left)
+      ..setFloat(12, crop.top)
+      ..setFloat(13, crop.width)
+      ..setFloat(14, crop.height)
       ..setImageSampler(0, blurred)
       ..setImageSampler(1, small);
-    final recorder = ui.PictureRecorder();
-    Canvas(
-      recorder,
-    ).drawRect(Offset.zero & size, Paint()..shader = c.shaders.composite);
+    canvas.drawRect(crop, Paint()..shader = c.shaders.composite);
     blurred.dispose();
     small.dispose();
-    return recorder.endRecording();
   }
 
   /// How much smaller the blurred copy is than the screen, like Flutter's own

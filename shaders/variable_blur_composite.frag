@@ -23,6 +23,8 @@ uniform float uTransition;   // distance over which the blur rises
 uniform float uSigmaSmall;   // full-strength sigma, in pixels of the small copy
 uniform float uFlip;         // 1 to flip the image's Y axis when sampling
 uniform vec2 uSmall;         // size of the small copy, in its pixels
+uniform vec2 uCropOrigin;    // top-left of the part the small copy shows
+uniform vec2 uCropSize;      // size of that part
 
 uniform sampler2D uBlurred;
 uniform sampler2D uShape;     // the unblurred small copy, for its alpha
@@ -47,7 +49,7 @@ void main() {
     fragColor = vec4(0.0);
     return;
   }
-  vec2 uv = p / uSize;
+  vec2 uv = (p - uCropOrigin) / uCropSize;
   float flip = uFlip;
 #ifdef IMPELLER_TARGET_OPENGLES
   flip = 1.0 - flip;

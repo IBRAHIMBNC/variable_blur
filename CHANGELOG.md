@@ -3,6 +3,7 @@
 ### Changed
 - **Small-copy blur, like Flutter's own blur**: The child is rendered into a small copy (down to 1/4 or 1/8 size for strong blur), blurred there, and laid back over the sharp child. The sharp area keeps every original pixel.
 - **Less work while scrolling**: The blur is only worked out again when the child's content or the blur settings change. Moving the widget reuses the last result.
+- **Only the blur regions are copied**: Instead of copying and blurring the whole child, only the blur regions (plus how far their blur reaches) are processed. Non-touching opposite regions, such as top and bottom, get one small copy each. On an iPhone 7 Plus (release mode, a 200 pt top fade over a full-screen scrolling list), the blur's extra memory fell from about 14 MB to about 11 MB and frame drawing time from 4.4 ms to 3.7 ms.
 - **Measured on an iPhone 17 Pro Max** (profile mode, 30 blurred cards scrolling): CPU about 50% instead of 113%, memory about 195 MB instead of 230 MB. With the blur strength changing every frame: CPU 66–94% instead of 128–142%, memory about 218 MB instead of 280 MB.
 - **True variable blur**: Each pixel gets its own blur strength that rises smoothly into the blur regions, instead of fading a sharp image into one fixed blur.
 - **Quality**: `BlurQuality` now sets how small the blurred copy may get and how many samples each pixel reads. It no longer weakens `sigma`.
