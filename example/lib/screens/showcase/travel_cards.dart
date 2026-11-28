@@ -167,8 +167,8 @@ class _StayPage extends StatelessWidget {
         // The photo blurs over its lower half, behind the details.
         VariableBlur(
           sigma: 26,
-          edgeIntensity: 0.22,
-          blurSides: const BlurSides.vertical(bottom: 0.48),
+          edgeIntensity: 0.35,
+          blurSides: const BlurSides.vertical(bottom: 0.4),
           child: Image.network(
             'https://images.unsplash.com/photo-${stay.photo}?w=1200',
             fit: BoxFit.cover,

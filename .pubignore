@@ -34,3 +34,4 @@ example/build/
 example/ios/Pods/
 example/android/.gradle/
 example/android/app/.cxx/
+doc/banner.jpg

@@ -6,6 +6,7 @@ import 'package:example/screens/showcase/lock_screen.dart';
 import 'package:example/screens/showcase/map_explorer.dart';
 import 'package:example/screens/showcase/miniature.dart';
 import 'package:example/screens/showcase/music_player.dart';
+import 'package:example/screens/showcase/scroll_hero.dart';
 import 'package:example/screens/showcase/story_cards.dart';
 import 'package:example/screens/showcase/travel_cards.dart';
 import 'package:example/screens/showcase/video_story.dart';
@@ -51,4 +52,5 @@ const _showcases = <String, Widget>{
   'map': MapExplorerShowcase(),
   'stories': StoryCardsShowcase(),
   'video': VideoStoryShowcase(),
+  'scroll': ScrollHeroShowcase(),
 };

@@ -12,6 +12,8 @@ topics:
   - widget
 
 screenshots:
+  - description: An article sliding over a cover photo that blurs more as you scroll.
+    path: doc/screenshots/scroll_story.jpg
   - description: Story cards whose photos melt into a blur tinted with their own colour.
     path: doc/screenshots/story_cards.jpg
   - description: A dark photo feed blurring under a header and a floating tab bar.

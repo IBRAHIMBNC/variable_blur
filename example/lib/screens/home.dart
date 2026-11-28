@@ -1,10 +1,10 @@
-import 'package:example/screens/gradual_top_blur.dart';
 import 'package:example/screens/performance_comparison.dart';
 import 'package:example/screens/showcase/frosted_feed.dart';
 import 'package:example/screens/showcase/lock_screen.dart';
 import 'package:example/screens/showcase/map_explorer.dart';
 import 'package:example/screens/showcase/miniature.dart';
 import 'package:example/screens/showcase/music_player.dart';
+import 'package:example/screens/showcase/scroll_hero.dart';
 import 'package:example/screens/showcase/story_cards.dart';
 import 'package:example/screens/showcase/travel_cards.dart';
 import 'package:example/screens/showcase/video_story.dart';
@@ -24,6 +24,12 @@ class HomeScreen extends StatelessWidget {
       'Blur that follows a playing video',
       '1490750967868-88aa4486c946',
       VideoStoryShowcase(),
+    ),
+    _Entry(
+      'Scroll Story',
+      'Blur that grows as you read',
+      '1506905925346-21bda4d32df4',
+      ScrollHeroShowcase(),
     ),
     _Entry(
       'Story Cards',
@@ -75,12 +81,6 @@ class HomeScreen extends StatelessWidget {
       'Tune every setting with sliders',
       Icons.tune_rounded,
       TiltShiftPhotography(),
-    ),
-    _MoreEntry(
-      'Blur on scroll',
-      'Blur strength that follows the scroll',
-      Icons.swap_vert_rounded,
-      GradualTopBlur(),
     ),
     _MoreEntry(
       'Quality and speed',
@@ -225,9 +225,9 @@ class _ShowcaseCard extends StatelessWidget {
           children: [
             VariableBlur(
               sigma: 18,
-              edgeIntensity: 0.2,
+              edgeIntensity: 0.4,
               quality: BlurQuality.medium,
-              blurSides: const BlurSides.vertical(bottom: 0.45),
+              blurSides: const ResponsiveBlurSides.vertical(bottom: 120),
               child: Image.network(
                 'https://images.unsplash.com/photo-${entry.photo}?w=500',
                 fit: BoxFit.cover,

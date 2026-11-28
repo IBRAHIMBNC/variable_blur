@@ -19,8 +19,8 @@ class MusicPlayerShowcase extends StatelessWidget {
           // The whole effect: the bottom 55% of the art blurs smoothly.
           VariableBlur(
             sigma: 30,
-            edgeIntensity: 0.3,
-            blurSides: const BlurSides.vertical(bottom: 0.55),
+            edgeIntensity: 0.5,
+            blurSides: const BlurSides.vertical(bottom: 0.45),
             child: Image.network(_cover, fit: BoxFit.cover),
           ),
           // A light shade so the white controls stay readable.

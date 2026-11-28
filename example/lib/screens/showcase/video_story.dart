@@ -53,7 +53,7 @@ class _VideoStoryShowcaseState extends State<VideoStoryShowcase> {
             VariableBlur(
               sigma: 24,
               edgeIntensity: 0.25,
-              blurSides: const BlurSides.vertical(top: 0.12, bottom: 0.4),
+              blurSides: const BlurSides.vertical(top: 0.12, bottom: 0.35),
               updateEveryFrame: _live,
               child: FittedBox(
                 fit: BoxFit.cover,

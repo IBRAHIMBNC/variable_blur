@@ -180,8 +180,8 @@ class _StoryCard extends StatelessWidget {
               // The photo blurs over its bottom half...
               VariableBlur(
                 sigma: 28,
-                edgeIntensity: 0.25,
-                blurSides: const BlurSides.vertical(bottom: 0.5),
+                edgeIntensity: 0.3,
+                blurSides: const ResponsiveBlurSides.vertical(bottom: 220),
                 child: Image.network(
                   'https://images.unsplash.com/photo-${story.photo}?w=900',
                   fit: BoxFit.cover,
