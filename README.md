@@ -21,8 +21,10 @@ modern iOS apps do under their headers, tab bars, photos and players.
 - **True progressive blur.** Every pixel gets its own blur strength, rising
   smoothly from sharp to full blur. Not a sharp image faded over a blurred one.
 - **The sharp part stays pixel-perfect.** Only the blurred edges are redrawn.
-- **Light.** Blurs a small copy of only the edges that need it, like Flutter's own
-  blur, and reuses the result while the widget scrolls.
+- **Light on memory and CPU.** Only about **11 MB** extra for a blurred header
+  on an iPhone 7 Plus. Against the full-size blur many packages use, it needs
+  **35 to 62 MB less memory** and **about half the CPU** (see
+  [Performance](#performance)).
 - **Works on video and live content.** Turn on `updateEveryFrame` and the blur
   follows a playing video or camera preview.
 - **One widget.** Wrap a widget, pick the sides, done. No setup, no native code.
@@ -353,13 +355,31 @@ under a bar, wrap the content and stack the bar on top (see
 
 ## Performance
 
-Measured on an **iPhone 7 Plus** (release mode), a full-screen list scrolling
-under a 200 pt blurred top band:
+Many blur packages take a full-size picture of the widget on every frame and
+blur all of it. Variable Blur takes a **small** picture of **only the edges that
+blur**, like Flutter's own `BackdropFilter`, and reuses it while the widget
+scrolls. That is where the savings come from.
 
-|                | Extra memory | Frame time |
-| -------------- | ------------ | ---------- |
-| No blur        | 0            | 3.8 ms     |
-| `VariableBlur` | about 11 MB  | 3.7 ms     |
+### Memory and CPU against a full-size blur
+
+Measured on an **iPhone 17 Pro Max** (profile mode) with Xcode's tools, one app
+at a time, two runs each: a list of 30 blurred cards scrolling non-stop. The
+"full-size blur" column is this package's previous version, which worked the
+same way as many blur packages.
+
+| Test                                               | Full-size blur                  | Variable Blur                  | Saved                |
+| -------------------------------------------------- | ------------------------------- | ------------------------------ | -------------------- |
+| 30 blurred cards scrolling                         | **230 MB** (peak 257), 113% CPU | **195 MB** (peak 204), 50% CPU | **35 MB**, less than half the CPU |
+| Same, blur strength changing every frame (hardest) | **280 MB** (peak 299), 128–142% CPU | **218 MB**, 66–94% CPU     | **62 MB**, about half the CPU |
+
+### Cost of one blurred header
+
+Measured on an **iPhone 7 Plus** (release mode), a 2016 phone: a full-screen list scrolling under a 200 pt blurred top band.
+
+|                    | App memory   | Extra memory   | Frame time |
+| ------------------ | ------------ | -------------- | ---------- |
+| No blur            | 104.7 MB     | –              | 3.8 ms     |
+| Variable Blur      | 115.6 MB     | **+11 MB**     | 3.7 ms     |
 
 All runs held 60 fps. Tips:
 
