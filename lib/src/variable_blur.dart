@@ -502,11 +502,13 @@ class _BlurLayer extends OffsetLayer {
     final sx = w / crop.width, sy = h / crop.height;
     final builder = ui.SceneBuilder()
       ..pushTransform(
+        // Scale, then shift so the crop's corner lands at the origin.
+        // setTranslationRaw works on every supported Flutter version.
         (Matrix4.diagonal3Values(
           sx,
           sy,
           1,
-        )..translateByDouble(-crop.left, -crop.top, 0, 1)).storage,
+        )..setTranslationRaw(-crop.left * sx, -crop.top * sy, 0)).storage,
       );
     addChildrenToScene(builder);
     builder.pop();
